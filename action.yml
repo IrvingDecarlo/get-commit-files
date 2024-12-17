@@ -12,4 +12,6 @@ runs:
   using: "composite"
   steps:
     - name: Say Hello
-      run: echo "Hello, ${{ inputs['who-to-greet'] }}!"
+      run: |
+        echo "Hello, ${{ inputs['who-to-greet'] }}!"
+        echo "This is a test"
