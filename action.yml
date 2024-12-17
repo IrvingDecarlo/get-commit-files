@@ -27,12 +27,6 @@ runs:
       run: |
         # Gets modified files from the event's commits
         echo -e "\033[36mFetching modified ${{ inputs.file-type }} files in all commits from the event...\033[0m"
-        
-        echo "Input test:"
-        echo "commits-json: ${{ inputs.commits-json }}"
-        echo "git-branch: ${{ inputs.git-branch }}"
-        echo "file-type: ${{ inputs.file-type }}"
-        echo "file-ignore: ${{ inputs.file-ignore }}"
 
         # Output the push's commits.
         COMMITS_COUNT=$(jq '. | length' <<EOF
@@ -79,4 +73,4 @@ runs:
           echo -e "\033[33mNo modified ${{ inputs.file-type }} files found in the current event.\033[0m"
         fi
         
-        outputs.modified-files=$FILTERED_PROJECTS
+        echo "modified-files=$FILTERED_PROJECTS" >> "$GITHUB_OUTPUT"

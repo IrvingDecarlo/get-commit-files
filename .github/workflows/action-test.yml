@@ -6,14 +6,14 @@ on:
       - main
 
 jobs:
-  publish:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Action Test
-        uses: irvingdecarlo/get-modified-files@v1-alpha.4
+        uses: irvingdecarlo/get-modified-files@v1-alpha.5
         with:
           commits-json: ${{ toJson(github.event.commits) }}
           git-branch: ${{ github.ref_name }}
