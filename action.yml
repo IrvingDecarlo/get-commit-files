@@ -25,8 +25,14 @@ runs:
     - name: Get modified files
       shell: bash
       run: |
-        # Script to get modified files from the event's commits
-        echo -e "\033[36mFetching modified $FILETYPE files in all commits from the event...\033[0m"
+        # Gets modified files from the event's commits
+        echo -e "\033[36mFetching modified ${{ inputs.file-type }} files in all commits from the event...\033[0m"
+        
+        echo "Input test:"
+        echo "commits-json: ${{ inputs.commits-json }}"
+        echo "git-branch: ${{ inputs.git-branch }}"
+        echo "file-type: ${{ inputs.file-type }}"
+        echo "file-ignore: ${{ inputs.file-ignore }}"
 
         # Output the push's commits.
         COMMITS_COUNT=$(echo "${{ inputs.commits-json }}" | jq '. | length')
