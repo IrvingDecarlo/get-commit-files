@@ -1,0 +1,16 @@
+name: Get Modified Files
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Action Test
+        uses: irvingdecarlo/get-modified-files@v0-wip
