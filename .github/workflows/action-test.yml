@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Action Test
-        uses: irvingdecarlo/get-modified-files@v1-alpha
+        uses: irvingdecarlo/get-modified-files@v1-alpha.1
         with:
           commits-json: ${{ toJson(github.event.commits) }}
           branch: ${{ github.ref_name }}
