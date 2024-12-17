@@ -22,6 +22,7 @@ jobs:
           file-ignore: ".fileignore"
           
       - name: Check result
+        id: result-check
         run: |
           echo "Outputted files:"
           MODIFIED_FILES=$(echo ${{ steps.action-test.outputs.modified-files }} | tr ',' '\n')
