@@ -12,7 +12,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Action_Test
+      - name: Action Test
+        id: action-test
         uses: irvingdecarlo/get-modified-files@v1-alpha.5
         with:
           commits-json: ${{ toJson(github.event.commits) }}
@@ -23,5 +24,5 @@ jobs:
       - name: Check result
         run: |
           echo "Outputted files:"
-          MODIFIED_FILES=$(echo ${{ steps.Action_Test.outputs.modified-files }} | tr ',' '\n')
+          MODIFIED_FILES=$(echo ${{ steps.action-test.outputs.modified-files }} | tr ',' '\n')
           echo "$MODIFIED_FILES"
