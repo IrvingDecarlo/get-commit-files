@@ -1,18 +1,68 @@
-name: "Hello World Action"
-description: "Greets the user"
+name: "Get Modified Files"
+description: "Fetches modified files based on the current push's commits and filters them."
+
 inputs:
-  who-to-greet:
-    description: "Who you want to greet"
+  commits-json:
+    description: "The current event's commits in JSON format."
     required: true
-    default: "World"
+  git-branch:
+    description: "The branch to fetch for modified files."
+    required: true
+  file-type:
+    description: "The file extension to look for."
+    required: false
+  file-ignore:
+    description: "The file name that, if found, will skip a file in the output."
+    required: false
+    
 outputs:
-  message:
-    description: "The greeting message"
+  modified-files:
+    description: "A comma-separated list of modified files."
+
 runs:
   using: "composite"
   steps:
-    - name: Say Hello
+    - name: Get modified files
       shell: bash
       run: |
-        echo "Hello, ${{ inputs['who-to-greet'] }}!"
-        echo "This is a test"
+        # Script to get modified files from the event's commits
+        echo -e "\033[36mFetching modified $FILETYPE files in all commits from the event...\033[0m"
+
+        # Output the push's commits.
+        COMMITS_COUNT=$(echo "${{ commits-json }}" | jq '. | length')
+        if [ -z "$COMMITS_COUNT" ] || [ "$COMMITS_COUNT" -eq 0 ]; then
+          echo "::error::Unable to determine the amount of commits in the event."
+          exit 1
+        fi
+        echo -e "\033[36mCommits in the event ($COMMITS_COUNT):\033[0m"
+        echo "${{ commits-json }}" | jq -r '.[].id'
+
+        # Ensure the repository is fully fetched to the correct depth
+        git fetch --prune --unshallow || true
+        git fetch origin "${{ git-branch }}" --depth="$((COMMITS_COUNT+1))" || true
+
+        # Get all modified files
+        PREVIOUS_SHA=$(git rev-parse HEAD~$COMMITS_COUNT)
+        CURRENT_SHA=$(echo "${{ commits-json }}" | jq -r '.[-1].id')
+        MODIFIED_PROJECTS=$(git diff --name-only $PREVIOUS_SHA..$CURRENT_SHA | grep "${{ file-type }}$" | sort | uniq || true)
+        FILTERED_PROJECTS=""
+
+        # Output modified projects and filter by <SkipPublish>
+        echo -e "\033[36mModified projects:\033[0m"
+        for project in $MODIFIED_PROJECTS; do
+          PROJECT_DIR=$(dirname "$project")
+          if [ -f "$PROJECT_DIR/${{ file-ignore }}" ]; then
+            echo -e "\033[31m$project (skipped)\033[0m"
+          else
+            FILTERED_PROJECTS="$FILTERED_PROJECTS$project,"
+            echo "$project"
+          fi
+        done
+        FILTERED_PROJECTS=${FILTERED_PROJECTS%,}
+
+        # Handle case where no projects are modified
+        if [ -z "$FILTERED_PROJECTS" ]; then
+          echo -e "\033[33mNo modified ${{ file-type }} files found in the current event.\033[0m"
+        fi
+        
+        modified-files=$FILTERED_PROJECTS
