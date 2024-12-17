@@ -35,13 +35,13 @@ runs:
         echo "file-ignore: ${{ inputs.file-ignore }}"
 
         # Output the push's commits.
-        COMMITS_COUNT=$(echo "${{ inputs.commits-json }}" | jq '. | length')
+        COMMITS_COUNT=$(jq '. | length' <<EOF ${{ inputs.commits-json }} EOF)
         if [ -z "$COMMITS_COUNT" ] || [ "$COMMITS_COUNT" -eq 0 ]; then
           echo "::error::Unable to determine the amount of commits in the event."
           exit 1
         fi
         echo -e "\033[36mCommits in the event ($COMMITS_COUNT):\033[0m"
-        echo "${{ inputs.commits-json }}" | jq -r '.[].id'
+        jq -r '.[].id' <<EOF ${{ inputs.commits-json }} EOF
 
         # Ensure the repository is fully fetched to the correct depth
         git fetch --prune --unshallow || true
@@ -49,7 +49,7 @@ runs:
 
         # Get all modified files
         PREVIOUS_SHA=$(git rev-parse HEAD~$COMMITS_COUNT)
-        CURRENT_SHA=$(echo "${{ inputs.commits-json }}" | jq -r '.[-1].id')
+        CURRENT_SHA=$(jq -r '.[-1].id' <<EOF ${{ inputs.commits-json }} EOF)
         MODIFIED_PROJECTS=$(git diff --name-only $PREVIOUS_SHA..$CURRENT_SHA | grep "${{ inputs.file-type }}$" | sort | uniq || true)
         FILTERED_PROJECTS=""
 
