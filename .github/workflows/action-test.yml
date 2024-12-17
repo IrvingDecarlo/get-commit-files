@@ -16,8 +16,8 @@ jobs:
         uses: irvingdecarlo/get-modified-files@v1-alpha.1
         with:
           commits-json: ${{ toJson(github.event.commits) }}
-          branch: ${{ github.ref_name }}
-          filetype: ".txt"
+          git-branch: ${{ github.ref_name }}
+          file-type: ".txt"
           file-ignore: ".fileignore"
           
       - name: Check result
