@@ -13,4 +13,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Action Test
-        uses: irvingdecarlo/get-modified-files@v0-wip
+        uses: irvingdecarlo/get-modified-files@v0-wip.1

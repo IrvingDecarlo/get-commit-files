@@ -12,6 +12,7 @@ runs:
   using: "composite"
   steps:
     - name: Say Hello
+      shell: bash
       run: |
         echo "Hello, ${{ inputs['who-to-greet'] }}!"
         echo "This is a test"
