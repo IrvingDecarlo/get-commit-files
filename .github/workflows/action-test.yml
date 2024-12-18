@@ -24,7 +24,7 @@ jobs:
       - name: Check result
         id: result-check
         run: |
-          echo "Outputs: ${{ toJson(steps.action-test.outputs) }}"
+          echo "Outputs: $(toJson(steps.action-test.outputs))"
           echo "Outputted files:"
-          MODIFIED_FILES=$(echo ${{ steps.action-test.outputs.modified-files }} | tr ',' '\n')
+          MODIFIED_FILES=$(echo $(steps.action-test.outputs.modified-files) | tr ',' '\n')
           echo "$MODIFIED_FILES"
