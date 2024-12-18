@@ -2,27 +2,28 @@ name: "Get Modified Files"
 description: "Fetches modified files based on the current push's commits and filters them."
 
 inputs:
-  commits_json:
+  commits-json:
     description: "The current event's commits in JSON format."
     required: true
-  git_branch:
+  git-branch:
     description: "The branch to fetch for modified files."
     required: true
-  file_type:
+  file-type:
     description: "The file extension to look for."
     required: false
-  file_ignore:
+  file-ignore:
     description: "The file name that, if found, will skip a file in the output."
     required: false
     
 outputs:
-  modified_files:
+  modified-files:
     description: "A comma-separated list of modified files."
 
 runs:
   using: "composite"
   steps:
     - name: Get modified files
+      id: get-commit-files
       shell: bash
       run: |
         # Gets modified files from the event's commits
@@ -30,7 +31,7 @@ runs:
 
         # Output the push's commits.
         COMMITS_COUNT=$(jq '. | length' <<EOF
-        ${{ inputs.commits_json }}
+        ${{ inputs.commits-json }}
         EOF
         )
         if [ -z "$COMMITS_COUNT" ] || [ "$COMMITS_COUNT" -eq 0 ]; then
@@ -39,27 +40,27 @@ runs:
         fi
         echo -e "\033[36mCommits in the event ($COMMITS_COUNT):\033[0m"
         jq -r '.[].id' <<EOF
-        ${{ inputs.commits_json }}
+        ${{ inputs.commits-json }}
         EOF
 
         # Ensure the repository is fully fetched to the correct depth
         git fetch --prune --unshallow || true
-        git fetch origin "${{ inputs.git_branch }}" --depth="$((COMMITS_COUNT+1))" || true
+        git fetch origin "${{ inputs.git-branch }}" --depth="$((COMMITS_COUNT+1))" || true
 
         # Get all modified files
         PREVIOUS_SHA=$(git rev-parse HEAD~$COMMITS_COUNT)
         CURRENT_SHA=$(jq -r '.[-1].id' <<EOF
-        ${{ inputs.commits_json }}
+        ${{ inputs.commits-json }}
         EOF
         )
-        MODIFIED_PROJECTS=$(git diff --name-only $PREVIOUS_SHA..$CURRENT_SHA | grep "${{ inputs.file_type }}$" | sort | uniq || true)
+        MODIFIED_PROJECTS=$(git diff --name-only $PREVIOUS_SHA..$CURRENT_SHA | grep "${{ inputs.file-type }}$" | sort | uniq || true)
         FILTERED_PROJECTS=""
 
         # Output modified files and filter by <SkipPublish>
         echo -e "\033[36mModified files:\033[0m"
         for project in $MODIFIED_PROJECTS; do
           PROJECT_DIR=$(dirname "$project")
-          if [ -f "$PROJECT_DIR/${{ inputs.file_ignore }}" ]; then
+          if [ -f "$PROJECT_DIR/${{ inputs.file-ignore }}" ]; then
             echo -e "\033[31m$project (skipped)\033[0m"
           else
             FILTERED_PROJECTS="$FILTERED_PROJECTS$project,"
@@ -70,8 +71,8 @@ runs:
 
         # Handle case where no files are modified
         if [ -z "$FILTERED_PROJECTS" ]; then
-          echo -e "\033[33mNo modified ${{ inputs.file_type }} files found in the current event.\033[0m"
+          echo -e "\033[33mNo modified ${{ inputs.file-type }} files found in the current event.\033[0m"
         fi
         
-        echo "Debug: $FILTERED_PROJECTS"
-        echo "modified_files=$FILTERED_PROJECTS" >> "$GITHUB_OUTPUT"
+        echo "DEBUG TEST: $FILTERED_PROJECTS"
+        echo "modified-files=$FILTERED_PROJECTS" >> "$GITHUB_OUTPUT"

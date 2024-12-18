@@ -13,19 +13,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Action Test
-        id: action_test
-        uses: irvingdecarlo/get-commit-files@v1-alpha.8
+        id: action-test
+        uses: irvingdecarlo/get-commit-files@v1-alpha.7
         with:
-          commits_json: ${{ toJson(github.event.commits) }}
-          git_branch: ${{ github.ref_name }}
-          file_type: ".txt"
-          file_ignore: ".fileignore"
+          commits-json: ${{ toJson(github.event.commits) }}
+          git-branch: ${{ github.ref_name }}
+          file-type: ".txt"
+          file-ignore: ".fileignore"
           
       - name: Check result
-        id: result_check
+        id: result-check
         run: |
-          echo "Outputs: ${{ toJson(steps.action_test.outputs) }}"
+          echo "Outputs: ${{ toJson(steps.action-test.outputs) }}"
           echo "Outputted files:"
-          MODIFIED_FILES=$(echo ${{ steps.action_test.outputs.modified_files }} | tr ',' '\n')
+          MODIFIED_FILES=$(echo ${{ steps.action-test.outputs.modified-files }} | tr ',' '\n')
           echo "$MODIFIED_FILES"
-          echo "Raw: ${{ steps.action_test.outputs.modified_files }}"
+          echo "Raw: ${{ steps.action-test.outputs.modified-files }}"
