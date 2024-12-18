@@ -18,7 +18,6 @@ inputs:
 outputs:
   modified-files:
     description: "A comma-separated list of modified files."
-    type: string
 
 runs:
   using: "composite"
