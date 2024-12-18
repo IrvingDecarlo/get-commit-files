@@ -14,7 +14,7 @@ jobs:
 
       - name: Action Test
         id: action-test
-        uses: irvingdecarlo/get-commit-files@v1-alpha.6
+        uses: irvingdecarlo/get-commit-files@v1-alpha.7
         with:
           commits-json: ${{ toJson(github.event.commits) }}
           git-branch: ${{ github.ref_name }}
@@ -24,7 +24,8 @@ jobs:
       - name: Check result
         id: result-check
         run: |
-          echo "Outputs: $(toJson(steps.action-test.outputs))"
+          echo "Outputs: ${{ toJson(steps.action-test.outputs) }}"
           echo "Outputted files:"
-          MODIFIED_FILES=$(echo $(steps.action-test.outputs.modified-files) | tr ',' '\n')
+          MODIFIED_FILES=$(echo ${{ steps.action-test.outputs.modified-files }} | tr ',' '\n')
           echo "$MODIFIED_FILES"
+          echo "Raw: ${{ steps.action-test.outputs.modified-files }}"
