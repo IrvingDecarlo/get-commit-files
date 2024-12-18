@@ -76,3 +76,4 @@ runs:
         
         echo "DEBUG TEST: $FILTERED_PROJECTS"
         echo "modified-files=$FILTERED_PROJECTS" >> "$GITHUB_OUTPUT"
+        cat "$GITHUB_OUTPUT"
