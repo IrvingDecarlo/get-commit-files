@@ -73,5 +73,4 @@ runs:
           echo -e "\033[33mNo modified ${{ inputs.file-type }} files found in the current event.\033[0m"
         fi
         
-        echo "DEBUG TEST: $FILTERED_PROJECTS"
         echo "modified-files=$FILTERED_PROJECTS" >> "$GITHUB_OUTPUT"
