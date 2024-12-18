@@ -14,7 +14,7 @@ jobs:
 
       - name: Action Test
         id: action-test
-        uses: irvingdecarlo/get-commit-files@v1-alpha.9
+        uses: irvingdecarlo/get-commit-files@v1-alpha.10
         with:
           commits-json: ${{ toJson(github.event.commits) }}
           git-branch: ${{ github.ref_name }}
