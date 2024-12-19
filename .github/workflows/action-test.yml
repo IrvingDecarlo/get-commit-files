@@ -20,20 +20,11 @@ jobs:
           git-branch: ${{ github.ref_name }}
           file-type: ".txt"
           file-ignore: ".fileignore"
-
-      - name: Output test
-        id: output-test
-        run: |
-          OUTPUT_TEST="test laalalalalalalalalal xxdxdxd"
-          echo "Output test: $OUTPUT_TEST"
-          echo "outtest=$OUTPUT_TEST" >> $GITHUB_OUTPUT
           
       - name: Check result
         id: result-check
         run: |
-          echo "Outputs: ${{ toJson(steps.action-test.outputs) }}"
           echo "Outputted files:"
           MODIFIED_FILES=$(echo ${{ steps.action-test.outputs.modified-files }} | tr ',' '\n')
           echo "$MODIFIED_FILES"
           echo "Raw: ${{ steps.action-test.outputs.modified-files }}"
-          echo "Output test: ${{ steps.output-test.outputs.outtest }}"
