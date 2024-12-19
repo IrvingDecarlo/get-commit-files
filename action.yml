@@ -1,5 +1,7 @@
 name: "Get Modified Files"
 description: "Fetches modified files based on the current event's commits and filters them."
+icon: git-commit
+color: orange
 
 inputs:
   commits-json:
