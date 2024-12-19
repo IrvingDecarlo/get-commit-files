@@ -2,10 +2,10 @@ get-commit-files, a GitHub Action by Irving Decarlo
 
 # What is the Action for?
 
-get-commit-files is an Action that is capable of getting a specific file type from commits that are part of a GitHub action, such as a push. With it, you are capable of getting all files that were modified or created within said action.
+get-commit-files is an Action that is capable of getting a specific file type from commits that are part of a GitHub event, such as a push. With it, you are capable of getting all files that were modified or created within said event.
 
 > [!IMPORTANT]
-> Not all GitHub actions were tested, only with push actions.
+> Not all GitHub event were tested, only with push actions.
 
 ## How to use
 
@@ -14,7 +14,7 @@ It can be used freely by any workflow. It requires 4 parameters:
 ```
 commits-json: ${{ toJson(github.event.commits) }}
 ```
-2. `git-branch`: The GitHub branch that invoked the action:
+2. `git-branch`: The GitHub branch that invoked the event:
 ```
 git-branch: ${{ github.ref_name }}
 ```

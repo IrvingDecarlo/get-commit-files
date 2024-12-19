@@ -75,4 +75,4 @@ runs:
         fi
         
         echo "DEBUG TEST: $FILTERED_PROJECTS"
-        echo "outputs.modified-files=$FILTERED_PROJECTS" >> $env.GITHUB_OUTPUT
+        echo "modified-files=$FILTERED_PROJECTS" >> $env.GITHUB_OUTPUT
