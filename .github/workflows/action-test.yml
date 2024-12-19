@@ -36,4 +36,4 @@ jobs:
           MODIFIED_FILES=$(echo ${{ steps.action-test.outputs.modified-files }} | tr ',' '\n')
           echo "$MODIFIED_FILES"
           echo "Raw: ${{ steps.action-test.outputs.modified-files }}"
-          echo "Output test: ${{ steps.output-test.output.outtest }}"
+          echo "Output test: ${{ steps.output-test.outputs.outtest }}"
