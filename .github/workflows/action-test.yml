@@ -24,7 +24,7 @@ jobs:
       - name: Output test
         id: output-test
         run: |
-          $OUTPUT_TEST="test laalalalalalalalalal xxdxdxd"
+          OUTPUT_TEST="test laalalalalalalalalal xxdxdxd"
           echo "Output test: $OUTPUT_TEST"
           echo "outtest=$OUTPUT_TEST" >> $GITHUB_OUTPUT
           
