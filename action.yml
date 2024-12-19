@@ -1,5 +1,5 @@
 name: "Get Modified Files"
-description: "Fetches modified files based on the current push's commits and filters them."
+description: "Fetches modified files based on the current event's commits and filters them."
 
 inputs:
   commits-json:
@@ -29,7 +29,7 @@ runs:
         # Gets modified files from the event's commits
         echo -e "\033[36mFetching modified ${{ inputs.file-type }} files in all commits from the event...\033[0m"
 
-        # Output the push's commits.
+        # Output the event's commits.
         COMMITS_COUNT=$(jq '. | length' <<EOF
         ${{ inputs.commits-json }}
         EOF
@@ -56,7 +56,7 @@ runs:
         MODIFIED_PROJECTS=$(git diff --name-only $PREVIOUS_SHA..$CURRENT_SHA | grep "${{ inputs.file-type }}$" | sort | uniq || true)
         FILTERED_PROJECTS=""
 
-        # Output modified files and filter by <SkipPublish>
+        # Output modified files and filter by the file-ignore
         echo -e "\033[36mModified files:\033[0m"
         for project in $MODIFIED_PROJECTS; do
           PROJECT_DIR=$(dirname "$project")
@@ -75,4 +75,4 @@ runs:
         fi
         
         echo "DEBUG TEST: $FILTERED_PROJECTS"
-        echo "modified-files=$FILTERED_PROJECTS" >> $env.GITHUB_OUTPUT
+        echo "outputs.modified-files=$FILTERED_PROJECTS" >> $env.GITHUB_OUTPUT
